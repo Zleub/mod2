@@ -1,9 +1,15 @@
 package com.example.examplemod;
 
 import com.example.examplemod.data.ExampleData;
+import com.example.examplemod.worldgen.carver.LabyrinthCarverConfiguration;
+import com.example.examplemod.worldgen.carver.LabyrinthWorldCarver;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -12,6 +18,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CaveWorldCarver;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,6 +40,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
+import java.util.Optional;
+
 @Mod(ExampleMod.MODID)
 public class ExampleMod
 {
@@ -39,20 +50,23 @@ public class ExampleMod
 //    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 //    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(ForgeRegistries.WORLD_CARVERS, MODID);
-//    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     public static final RegistryObject<WorldCarver<?>> LABYRINTH = CARVERS.register("labyrinth", () -> new LabyrinthWorldCarver(LabyrinthCarverConfiguration.CODEC));
-//    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
-//    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
-//
+
+
+
+//    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("basic_yellow_wallpaper", () -> new Block(BlockBehaviour.Properties.copy(Blocks.BEDROCK)));
+//    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("basic_yellow_wallpaper", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
+
 //    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
 //            .alwaysEat().nutrition(1).saturationMod(2f).build())));
-//
-//    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
-//            .withTabsBefore(CreativeModeTabs.COMBAT)
-//            .icon(() -> EXAMPLE_ITEM.get().getDefaultInstance())
-//            .displayItems((parameters, output) -> {
-//            }).build());
+
+    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
+            .withTabsBefore(CreativeModeTabs.COMBAT)
+//            .icon(() -> EXAMPLE_BLOCK_ITEM.get().getDefaultInstance())
+            .displayItems((parameters, output) -> {
+            }).build());
 
     public ExampleMod()
     {
@@ -64,10 +78,10 @@ public class ExampleMod
 
         modEventBus.addListener(this::commonSetup);
 
-//        BLOCKS.register(modEventBus);
-//        ITEMS.register(modEventBus);
+        ExampleBlocks.BLOCKS.register(modEventBus);
+        ExampleBlocks.ITEMS.register(modEventBus);
         CARVERS.register(modEventBus);
-//        CREATIVE_MODE_TABS.register(modEventBus);
+        CREATIVE_MODE_TABS.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -90,8 +104,12 @@ public class ExampleMod
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-//        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
-//            event.accept(EXAMPLE_BLOCK_ITEM);
+        if (event.getTabKey() == EXAMPLE_TAB.getKey()) {
+            for(RegistryObject<Item> item : ExampleBlocks.ITEMS.getEntries()) {
+                event.accept(item);
+            }
+        }
+//
     }
 
     @SubscribeEvent

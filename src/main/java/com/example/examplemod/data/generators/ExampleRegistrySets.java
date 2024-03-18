@@ -1,8 +1,9 @@
 package com.example.examplemod.data.generators;
 
-import com.example.examplemod.data.generators.biome.ExampleBiomes;
-import com.example.examplemod.ExampleDimensions;
+import com.example.examplemod.data.generators.worldgen.biome.ExampleBiomes;
+import com.example.examplemod.data.generators.dimension.ExampleDimensions;
 import com.example.examplemod.ExampleMod;
+import com.example.examplemod.data.generators.worldgen.configured_carver.ExampleConfiguredCarvers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
@@ -16,14 +17,16 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 public class ExampleRegistrySets extends DatapackBuiltinEntriesProvider {
     public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
+//            .buildPatch()
+//            .buildPatch(Registries.BLOCK, ExampleMod::bootstrapBlocks)
+
 //            .add(Registries.CONFIGURED_FEATURE, AetherConfiguredFeatures::bootstrap)
 //            .add(Registries.PLACED_FEATURE, AetherPlacedFeatures::bootstrap)
             .add(Registries.BIOME, ExampleBiomes::bootstrap)
-//            .add(Registries.DENSITY_FUNCTION, AetherDensityFunctions::bootstrap)
+//            .add(Registries.DENSITY_FUNCTION, ExampleDensityFunction::bootstrap)
 //            .add(Registries.NOISE, AetherNoises::bootstrap)
-//            .add(Registries.NOISE_SETTINGS, AetherNoiseSettings::bootstrap)
+            .add(Registries.NOISE_SETTINGS, ExampleNoiseSettings::bootstrap)
             .add(Registries.CONFIGURED_CARVER, ExampleConfiguredCarvers::bootstrap)
-//            .add(Registries.CARVER, ExampleCarvers::bootstrap) // NOT A DATA GENERABLE
             .add(Registries.DIMENSION_TYPE, ExampleDimensions::bootstrapDimensionType)
             .add(Registries.LEVEL_STEM, ExampleDimensions::bootstrapLevelStem);
 //            .add(Registries.STRUCTURE, AetherStructures::bootstrap)

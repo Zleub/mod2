@@ -37,6 +37,6 @@
         }
       ]
     },
-    "settings": "minecraft:overworld"
+    "settings": "examplemod:labyrinth"
   }
 }

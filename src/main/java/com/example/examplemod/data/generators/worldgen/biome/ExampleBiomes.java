@@ -1,8 +1,6 @@
-package com.example.examplemod.data.generators.biome;
+package com.example.examplemod.data.generators.worldgen.biome;
 
 import com.example.examplemod.ExampleMod;
-import com.example.examplemod.data.generators.ExampleConfiguredCarvers;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;

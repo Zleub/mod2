@@ -1,6 +1,7 @@
 package com.example.examplemod.data;
 
 import com.example.examplemod.ExampleMod;
+import com.example.examplemod.data.generators.ExampleBlockStateData;
 import com.example.examplemod.data.generators.ExampleRegistrySets;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
@@ -10,6 +11,7 @@ import net.minecraft.data.metadata.PackMetadataGenerator;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 
 import java.util.Map;
@@ -20,12 +22,13 @@ public class ExampleData {
         ExampleMod.LOGGER.warn("dataSetup");
 
         DataGenerator generator = event.getGenerator();
+        ExistingFileHelper fileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         PackOutput packOutput = generator.getPackOutput();
 
         generator.addProvider(event.includeServer(), new ExampleRegistrySets(packOutput, lookupProvider));
 
-
+        generator.addProvider(event.includeClient(), new ExampleBlockStateData(packOutput, ExampleMod.MODID, fileHelper));
 
         // pack.mcmeta
 //        PackMetadataGenerator packMeta = new PackMetadataGenerator(packOutput);

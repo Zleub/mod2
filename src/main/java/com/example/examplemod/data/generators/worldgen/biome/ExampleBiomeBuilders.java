@@ -1,13 +1,8 @@
-package com.example.examplemod.data.generators.biome;
+package com.example.examplemod.data.generators.worldgen.biome;
 
-import com.example.examplemod.LabyrinthWorldCarver;
-import com.example.examplemod.data.generators.ExampleCarvers;
-import com.example.examplemod.data.generators.ExampleConfiguredCarvers;
-import com.example.examplemod.data.generators.biome.ExampleBiomes;
+import com.example.examplemod.data.generators.worldgen.configured_carver.ExampleConfiguredCarvers;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
@@ -39,10 +34,12 @@ public class ExampleBiomeBuilders {
 //                        .backgroundMusic(new Music(AetherSoundEvents.MUSIC_AETHER.getHolder().orElseThrow(), 12000, 24000, true))
                         .build())
                 .mobSpawnSettings(new MobSpawnSettings.Builder().build())
-                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
-                        .addCarver(ExampleGenerationStep.Carving.AIR, worldCarvers.getOrThrow(ExampleConfiguredCarvers.LABYRINTH)).build())
+                //.generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers).build())
+                        //.addCarver(ExampleGenerationStep.Carving.AIR, worldCarvers.getOrThrow(ExampleConfiguredCarvers.LABYRINTH)).build())
 //                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers).build())
 //                .generationSettings(new BiomeGenerationSettings.PlainBuilder().build())
+                .generationSettings(new BiomeGenerationSettings.PlainBuilder()
+                    .addCarver(ExampleGenerationStep.Carving.AIR, worldCarvers.getOrThrow(ExampleConfiguredCarvers.LABYRINTH)).build())
                 .temperatureAdjustment(Biome.TemperatureModifier.NONE)
                 .build();
     }
