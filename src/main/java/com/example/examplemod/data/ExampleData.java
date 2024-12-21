@@ -3,14 +3,18 @@ package com.example.examplemod.data;
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.data.generators.ExampleBlockStateData;
 import com.example.examplemod.data.generators.ExampleRegistrySets;
+import com.example.examplemod.data.generators.ExampleTagsData;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.metadata.PackMetadataGenerator;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.tags.BlockTags;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 
@@ -29,6 +33,8 @@ public class ExampleData {
         generator.addProvider(event.includeServer(), new ExampleRegistrySets(packOutput, lookupProvider));
 
         generator.addProvider(event.includeClient(), new ExampleBlockStateData(packOutput, ExampleMod.MODID, fileHelper));
+
+        generator.addProvider(true, new ExampleTagsData(packOutput, BlockTags.OVERWORLD_CARVER_REPLACEABLES.registry(), lookupProvider, ExampleMod.MODID, fileHelper));
 
         // pack.mcmeta
 //        PackMetadataGenerator packMeta = new PackMetadataGenerator(packOutput);

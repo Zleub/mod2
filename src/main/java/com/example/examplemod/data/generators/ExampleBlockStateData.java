@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -34,15 +35,7 @@ public class ExampleBlockStateData extends BlockStateProvider {
             this.axisBlock(block);
 
             ResourceLocation resourceLocation = blockTexture(block);
-            this.itemModels().cubeColumn(resourceLocation.toString(), extend(resourceLocation, "_side"), extend(resourceLocation, "_end") );
+            this.simpleBlockItem(block, this.itemModels().cubeColumn(resourceLocation.toString(), extend(resourceLocation, "_side"), extend(resourceLocation, "_end")));
         }
-
-
-//        RotatedPillarBlock block = ExampleBlocks.SMALL_YELLOW_WALLPAPER_BORDERED.get();
-//
-//        this.axisBlock(block);
-//
-//        ResourceLocation resourceLocation = blockTexture(ExampleBlocks.SMALL_YELLOW_WALLPAPER_BORDERED.get());
-//        this.itemModels().cubeColumn(resourceLocation.toString(), extend(resourceLocation, "_side"), extend(resourceLocation, "_end") );
     }
 }

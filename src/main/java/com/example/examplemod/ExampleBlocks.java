@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 public class ExampleBlocks {
     public static final ResourceKey<Block> YELLOW_WALLPAPER = createKey("small_yellow_wallpaper");
+    public static final ResourceKey<Block> PLAIN_WALLPAPER = createKey("basic_yellow_wallpaper");
     private static ResourceKey<Block> createKey(String name) {
         return ResourceKey.create(Registries.BLOCK, new ResourceLocation(ExampleMod.MODID, name));
     }
-
 
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ExampleMod.MODID);
@@ -33,7 +33,8 @@ public class ExampleBlocks {
     public static final ArrayList<RegistryObject<Block>> SIMPLE_BLOCK_LIST = new ArrayList<>();
 
     public static void registerSimpleBlock(String name) {
-        RegistryObject<Block> block = BLOCKS.register(name, () -> new Block(BlockBehaviour.Properties.copy(Blocks.BEDROCK)));
+        RegistryObject<Block> block = BLOCKS.register(name, () -> new Block(
+                BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
         RegistryObject<BlockItem> item = ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
 
         SIMPLE_BLOCK_LIST.add(block);
@@ -46,11 +47,9 @@ public class ExampleBlocks {
     public static final ArrayList<RegistryObject<RotatedPillarBlock>> ROTATED_BLOCK_LIST = new ArrayList<>();
 
     public static void registerRotatedBlock(String name) {
-        RegistryObject<RotatedPillarBlock> block = BLOCKS.register(name, () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
-                .mapColor(MapColor.PODZOL)
-                .instrument(NoteBlockInstrument.BASS)
-                .strength(2.0F)
-                .sound(SoundType.WOOD)));
+        RegistryObject<RotatedPillarBlock> block = BLOCKS.register(name, () -> new RotatedPillarBlock(
+                BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
+            ));
         RegistryObject<BlockItem> item = ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
 
         ROTATED_BLOCK_LIST.add(block);
