@@ -6,7 +6,7 @@ import com.example.examplemod.worldgen.carver.LabyrinthWorldCarver;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -26,7 +26,7 @@ public class ExampleConfiguredCarvers {
         return ResourceKey.create(Registries.CONFIGURED_CARVER, new ResourceLocation(ExampleMod.MODID, name));
     }
 
-    public static void bootstrap(BootstapContext<ConfiguredWorldCarver<?>> context) {
+    public static void bootstrap(BootstrapContext<ConfiguredWorldCarver<?>> context) {
         HolderGetter<Block> blockHolder = context.lookup(Registries.BLOCK);
         HolderGetter<WorldCarver<?>> carverHolder = context.lookup(Registries.CARVER);
 
@@ -35,7 +35,7 @@ public class ExampleConfiguredCarvers {
                 UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)), // HeightProvider
                 UniformFloat.of(0.1F, 0.9F), // yScale
                 VerticalAnchor.aboveBottom(0), // lavaLevel
-                CarverDebugSettings.of(true, Blocks.CRIMSON_BUTTON.defaultBlockState()), // debugSettings
+                CarverDebugSettings.of(false, Blocks.CRIMSON_BUTTON.defaultBlockState()), // debugSettings
                 blockHolder.getOrThrow(BlockTags.OVERWORLD_CARVER_REPLACEABLES) // replaceable
         );
 

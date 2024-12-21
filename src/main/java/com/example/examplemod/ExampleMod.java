@@ -2,27 +2,18 @@ package com.example.examplemod;
 
 import com.example.examplemod.data.ExampleData;
 import com.example.examplemod.worldgen.carver.LabyrinthCarverConfiguration;
+import com.example.examplemod.worldgen.LabyrinthChunkGenerator;
 import com.example.examplemod.worldgen.carver.LabyrinthWorldCarver;
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
-import net.minecraft.world.level.levelgen.carver.CaveWorldCarver;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
-import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -40,8 +31,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
-import java.util.Optional;
-
 @Mod(ExampleMod.MODID)
 public class ExampleMod
 {
@@ -49,11 +38,20 @@ public class ExampleMod
     public static final Logger LOGGER = LogUtils.getLogger();
 //    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 //    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
-    public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(ForgeRegistries.WORLD_CARVERS, MODID);
+
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
+
+    public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(ForgeRegistries.WORLD_CARVERS, MODID);
     public static final RegistryObject<WorldCarver<?>> LABYRINTH = CARVERS.register("labyrinth", () -> new LabyrinthWorldCarver(LabyrinthCarverConfiguration.CODEC));
 
+
+
+    public static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
+    public static final RegistryObject<MapCodec<? extends ChunkGenerator>> LABYRINTH_GEN = CHUNK_GENERATOR.register("labyrinth", () -> {
+           ExampleMod.LOGGER.info("Chunk Generator registration");
+           return LabyrinthChunkGenerator.CODEC;
+    });
 
 
 //    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("basic_yellow_wallpaper", () -> new Block(BlockBehaviour.Properties.copy(Blocks.BEDROCK)));
@@ -80,6 +78,8 @@ public class ExampleMod
 
         ExampleBlocks.BLOCKS.register(modEventBus);
         ExampleBlocks.ITEMS.register(modEventBus);
+
+        CHUNK_GENERATOR.register(modEventBus);
         CARVERS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
 

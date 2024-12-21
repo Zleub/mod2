@@ -1,41 +1,10 @@
 {
   "type": "examplemod:the_aether",
   "generator": {
-    "type": "minecraft:noise",
-    "biome_source": {
-      "type": "minecraft:multi_noise",
-      "biomes": [
-        {
-          "biome": "examplemod:level_0",
-          "parameters": {
-            "continentalness": [
-              -1.0,
-              1.0
-            ],
-            "depth": [
-              -1.0,
-              1.0
-            ],
-            "erosion": [
-              -1.0,
-              1.0
-            ],
-            "humidity": [
-              -1.0,
-              1.0
-            ],
-            "offset": 0.0,
-            "temperature": [
-              -1.0,
-              -0.8
-            ],
-            "weirdness": [
-              -1.0,
-              1.0
-            ]
-          }
-        }
-      ]
+    "type": "examplemod:labyrinth",
+    "aaa_biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "examplemod:level_0"
     },
     "settings": "examplemod:labyrinth"
   }

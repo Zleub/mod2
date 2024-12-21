@@ -1,7 +1,5 @@
 {
-  "carvers": {
-    "air": "examplemod:labyrinth"
-  },
+  "carvers": {},
   "downfall": 0.0,
   "effects": {
     "fog_color": 9671612,

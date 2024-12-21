@@ -4,7 +4,7 @@ import com.example.examplemod.ExampleBlocks;
 import com.example.examplemod.ExampleMod;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstapContext;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +26,7 @@ public class ExampleNoiseSettings {
         return ResourceKey.create(Registries.NOISE_SETTINGS, new ResourceLocation(ExampleMod.MODID, name));
     }
 
-    public static void bootstrap(BootstapContext<NoiseGeneratorSettings> context) {
+    public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {
         HolderGetter<Block> blocks = context.lookup(Registries.BLOCK);
         HolderGetter<DensityFunction> densityFunctions = context.lookup(Registries.DENSITY_FUNCTION);
 
@@ -41,13 +41,13 @@ public class ExampleNoiseSettings {
                         1, // noiseSizeHorizontal
                         4 // noiseSizeVertical
                 ),
-                Blocks.STONE.defaultBlockState(),
+                blocks.getOrThrow(ExampleBlocks.YELLOW_WALLPAPER).value().defaultBlockState(),
                 Blocks.WATER.defaultBlockState(),
                 new NoiseRouter(
                         DensityFunctions.zero(), // barrierNoise
-                        DensityFunctions.constant(-1), // fluidLevelFloodednessNoise
+                        DensityFunctions.zero(), // fluidLevelFloodednessNoise
                         DensityFunctions.zero(), // fluidLevelSpreadNoise
-                        DensityFunctions.constant(-1), // lavaNoise
+                        DensityFunctions.zero(), // lavaNoise
                         DensityFunctions.zero(), // temperature
                         DensityFunctions.zero(), // vegetation
                         DensityFunctions.zero(), // continents
@@ -60,11 +60,23 @@ public class ExampleNoiseSettings {
                         DensityFunctions.zero(), // veinRidged
                         DensityFunctions.zero()  // veinGap
                 ),
-                SurfaceRules.state(blocks.getOrThrow(ExampleBlocks.YELLOW_WALLPAPER).get().defaultBlockState()),
+                SurfaceRules.sequence(
+                        SurfaceRules.ifTrue(
+                                SurfaceRules.yBlockCheck(VerticalAnchor.absolute(14), 0),
+                                SurfaceRules.state(Blocks.BEDROCK.defaultBlockState())),
+                        SurfaceRules.ifTrue(
+                                SurfaceRules.not(SurfaceRules.yBlockCheck(VerticalAnchor.absolute(2), 0)),
+                                SurfaceRules.state(Blocks.BEDROCK.defaultBlockState())
+                        )
+//                        SurfaceRules.ifTrue(
+//                                SurfaceRules.
+//                        )
+                ),
+//                SurfaceRules.state(blocks.getOrThrow(ExampleBlocks.YELLOW_WALLPAPER).get().defaultBlockState()),
                 (new OverworldBiomeBuilder()).spawnTarget(),
-                63,
+                0,
                 false,
-                true,
+                false,
                 false,
                 false
         ));
