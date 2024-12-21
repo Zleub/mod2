@@ -8,10 +8,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
+//import net.minecraftforge.client.model.generators.BlockStateProvider;
+//import net.minecraftforge.client.model.generators.ItemModelBuilder;
+//import net.minecraftforge.common.data.ExistingFileHelper;
+//import net.minecraftforge.registries.RegistryObject;
 
 public class ExampleBlockStateData extends BlockStateProvider {
 
@@ -20,17 +24,17 @@ public class ExampleBlockStateData extends BlockStateProvider {
     }
 
     private ResourceLocation extend(ResourceLocation rl, String suffix) {
-        return new ResourceLocation(rl.getNamespace(), rl.getPath() + suffix);
+        return ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), rl.getPath() + suffix);
     }
 
     @Override
     protected void registerStatesAndModels() {
-        for (RegistryObject<Block> entry : ExampleBlocks.SIMPLE_BLOCK_LIST) {
+        for (DeferredHolder<Block, Block> entry : ExampleBlocks.SIMPLE_BLOCK_LIST) {
             Block block = entry.get();
             this.simpleBlockWithItem(block, cubeAll(block));
         }
 
-        for (RegistryObject<RotatedPillarBlock> entry : ExampleBlocks.ROTATED_BLOCK_LIST) {
+        for (DeferredHolder<Block, RotatedPillarBlock> entry : ExampleBlocks.ROTATED_BLOCK_LIST) {
             RotatedPillarBlock block = entry.get();
             this.axisBlock(block);
 

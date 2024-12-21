@@ -4,6 +4,7 @@ import com.example.examplemod.data.generators.worldgen.configured_carver.Example
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.Carvers;
+import net.minecraft.sounds.Music;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
@@ -32,7 +33,7 @@ public class ExampleBiomeBuilders {
                         .grassColorOverride(0xb1_ff_cb)
                         .foliageColorOverride(0xb1_ff_cb)
                         .grassColorModifier(BiomeSpecialEffects.GrassColorModifier.NONE)
-                        .backgroundMusic(null)
+                        .backgroundMusic((Music) null)
 //                        .backgroundMusic(new Music(AetherSoundEvents.MUSIC_AETHER.getHolder().orElseThrow(), 12000, 24000, true))
                         .build())
                 .mobSpawnSettings(new MobSpawnSettings.Builder().build())

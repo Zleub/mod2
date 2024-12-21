@@ -6,7 +6,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
-import net.minecraftforge.common.data.ExistingFileHelper;
+//import net.minecraftforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,6 @@ public class ExampleTagsData extends TagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider p_256380_) {
-        tag(BlockTags.OVERWORLD_CARVER_REPLACEABLES).add(ExampleBlocks.YELLOW_WALLPAPER);
+        this.tag(BlockTags.OVERWORLD_CARVER_REPLACEABLES).add(ExampleBlocks.YELLOW_WALLPAPER);
     }
 }

@@ -23,7 +23,7 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import java.util.OptionalLong;
 
 public class ExampleDimensions {
-    private final static ResourceLocation AETHER_LEVEL_ID = new ResourceLocation(ExampleMod.MODID, "the_aether");
+    private final static ResourceLocation AETHER_LEVEL_ID = ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "the_aether");
 
     // DimensionType - Specifies the logic and settings for a dimension.
     public static final ResourceKey<DimensionType> AETHER_DIMENSION_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, AETHER_LEVEL_ID);
@@ -48,7 +48,7 @@ public class ExampleDimensions {
                 16,
                 16,
                 BlockTags.INFINIBURN_OVERWORLD,
-                new ResourceLocation(ExampleMod.MODID, "the_aether"),
+                AETHER_LEVEL_ID,
                 0.0F,
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
     }

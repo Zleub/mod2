@@ -11,6 +11,8 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -22,10 +24,13 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+//import net.minecraftforge.event.server.ServerStartingEvent;
+//import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.loading.FMLPaths;
+//import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -317,35 +322,34 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(
-            Executor p_224312_, Blender p_224313_, RandomState p_224314_, StructureManager p_224315_, ChunkAccess p_224316_
-    ) {
-        NoiseSettings noisesettings = this.settings.value().noiseSettings().clampToHeightAccessor(p_224316_.getHeightAccessorForGeneration());
+    public CompletableFuture<ChunkAccess> fillFromNoise(Blender p_224313_, RandomState p_224314_, StructureManager p_224315_, ChunkAccess p_224316_) {
+        NoiseSettings noisesettings = ((NoiseGeneratorSettings)this.settings.value()).noiseSettings().clampToHeightAccessor(p_224316_.getHeightAccessorForGeneration());
         int i = noisesettings.minY();
         int j = Mth.floorDiv(i, noisesettings.getCellHeight());
         int k = Mth.floorDiv(noisesettings.height(), noisesettings.getCellHeight());
-        if (k <= 0) {
-            return CompletableFuture.completedFuture(p_224316_);
-        } else {
+        return k <= 0 ? CompletableFuture.completedFuture(p_224316_) : CompletableFuture.supplyAsync(() -> {
             int l = p_224316_.getSectionIndex(k * noisesettings.getCellHeight() - 1 + i);
             int i1 = p_224316_.getSectionIndex(i);
             Set<LevelChunkSection> set = Sets.newHashSet();
 
-            for (int j1 = l; j1 >= i1; j1--) {
+            for(int j1 = l; j1 >= i1; --j1) {
                 LevelChunkSection levelchunksection = p_224316_.getSection(j1);
                 levelchunksection.acquire();
                 set.add(levelchunksection);
             }
 
-            return CompletableFuture.supplyAsync(
-                            Util.wrapThreadWithTaskName("wgen_fill_noise", () -> this.doFill(p_224313_, p_224315_, p_224314_, p_224316_, j, k)), Util.backgroundExecutor()
-                    )
-                    .whenCompleteAsync((p_224309_, p_224310_) -> {
-                        for (LevelChunkSection levelchunksection1 : set) {
-                            levelchunksection1.release();
-                        }
-                    }, p_224312_);
-        }
+            ChunkAccess chunkaccess;
+            try {
+                chunkaccess = this.doFill(p_224313_, p_224315_, p_224314_, p_224316_, j, k);
+            } finally {
+                for(LevelChunkSection levelchunksection1 : set) {
+                    levelchunksection1.release();
+                }
+
+            }
+
+            return chunkaccess;
+        }, Util.backgroundExecutor().forName("wgen_fill_noise"));
     }
 
     private ChunkAccess doFill(Blender blender, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess, int minSectionIndex, int sectionHeight) {
@@ -377,7 +381,7 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
                 double value = basic.resolve(x, z);
 //                ExampleMod.LOGGER.info("Value: {}", value);
 
-                Block small_wallpaper = (x % 3 == 0 && z % 3 == 0) ? ForgeRegistries.BLOCKS.getValue(ExampleBlocks.YELLOW_WALLPAPER.location()) : ForgeRegistries.BLOCKS.getValue(ExampleBlocks.PLAIN_WALLPAPER.location());
+                Block small_wallpaper = (x % 3 == 0 && z % 3 == 0) ? BuiltInRegistries.BLOCK.getValue(ExampleBlocks.YELLOW_WALLPAPER.location()) : BuiltInRegistries.BLOCK.getValue(ExampleBlocks.PLAIN_WALLPAPER.location());
 
                 for (int y = minY;  y < minY + 3; y++) {
                     levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);

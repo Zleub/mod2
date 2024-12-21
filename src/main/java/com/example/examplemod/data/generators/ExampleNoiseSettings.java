@@ -23,7 +23,7 @@ public class ExampleNoiseSettings {
     public static final ResourceKey<NoiseGeneratorSettings> LABYRINTH = createKey("labyrinth");
 
     private static ResourceKey<NoiseGeneratorSettings> createKey(String name) {
-        return ResourceKey.create(Registries.NOISE_SETTINGS, new ResourceLocation(ExampleMod.MODID, name));
+        return ResourceKey.create(Registries.NOISE_SETTINGS, ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, name));
     }
 
     public static void bootstrap(BootstrapContext<NoiseGeneratorSettings> context) {

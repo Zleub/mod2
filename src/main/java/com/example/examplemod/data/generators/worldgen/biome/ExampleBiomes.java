@@ -20,7 +20,7 @@ public class ExampleBiomes {
     public static final ResourceKey<Biome> LEVEL_0 = createKey("level_0");
 
     private static ResourceKey<Biome> createKey(String name) {
-        return ResourceKey.create(Registries.BIOME, new ResourceLocation(ExampleMod.MODID, name));
+        return ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, name));
     }
 
     public static void bootstrap(BootstrapContext<Biome> context) {

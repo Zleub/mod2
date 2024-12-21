@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.NoiseRouterData;
 public class ExampleDensityFunction extends NoiseRouterData {
     public static final ResourceKey<DensityFunction> ZERO = createKey("zero");
     private static ResourceKey<DensityFunction> createKey(String p_209537_) {
-        return ResourceKey.create(Registries.DENSITY_FUNCTION, new ResourceLocation(p_209537_));
+        return ResourceKey.create(Registries.DENSITY_FUNCTION, ResourceLocation.withDefaultNamespace(p_209537_));
     }
 
     public static Holder<? extends DensityFunction> bootstrap(BootstrapContext<DensityFunction> p_256220_) {

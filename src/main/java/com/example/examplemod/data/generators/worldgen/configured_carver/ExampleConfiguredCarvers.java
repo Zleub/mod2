@@ -23,7 +23,7 @@ public class ExampleConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> LABYRINTH = createKey("labyrinth");
 
     private static ResourceKey<ConfiguredWorldCarver<?>> createKey(String name) {
-        return ResourceKey.create(Registries.CONFIGURED_CARVER, new ResourceLocation(ExampleMod.MODID, name));
+        return ResourceKey.create(Registries.CONFIGURED_CARVER, ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, name));
     }
 
     public static void bootstrap(BootstrapContext<ConfiguredWorldCarver<?>> context) {
@@ -40,10 +40,10 @@ public class ExampleConfiguredCarvers {
         );
 
 
-        ResourceKey<WorldCarver<?>> labyrinthCarver = ResourceKey.create(Registries.CARVER, new ResourceLocation(ExampleMod.MODID, "labyrinth"));
+        ResourceKey<WorldCarver<?>> labyrinthCarver = ResourceKey.create(Registries.CARVER, ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "labyrinth"));
         Holder.Reference<WorldCarver<?>> labyrinth = carverHolder.getOrThrow(labyrinthCarver);
 
-        LabyrinthWorldCarver carver = (LabyrinthWorldCarver) labyrinth.get();
+        LabyrinthWorldCarver carver = (LabyrinthWorldCarver) labyrinth.value();
         context.register(ExampleConfiguredCarvers.LABYRINTH, carver.configured(config));
     }
 }

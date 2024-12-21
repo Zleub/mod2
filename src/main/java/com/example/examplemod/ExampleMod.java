@@ -7,28 +7,46 @@ import com.example.examplemod.worldgen.carver.LabyrinthWorldCarver;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+//import net.minecraftforge.api.distmarker.Dist;
+//import net.minecraftforge.common.MinecraftForge;
+//import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+//import net.minecraftforge.event.server.ServerStartingEvent;
+//import net.minecraftforge.eventbus.api.IEventBus;
+//import net.minecraftforge.eventbus.api.SubscribeEvent;
+//import net.minecraftforge.fml.ModLoadingContext;
+//import net.minecraftforge.fml.common.Mod;
+//import net.minecraftforge.fml.config.ModConfig;
+//import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+//import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+//import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+//import net.minecraftforge.registries.DeferredRegister;
+//import net.minecraftforge.registries.ForgeRegistries;
+//import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
 
 @Mod(ExampleMod.MODID)
@@ -42,13 +60,13 @@ public class ExampleMod
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
 
-    public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(ForgeRegistries.WORLD_CARVERS, MODID);
-    public static final RegistryObject<WorldCarver<?>> LABYRINTH = CARVERS.register("labyrinth", () -> new LabyrinthWorldCarver(LabyrinthCarverConfiguration.CODEC));
+    public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(Registries.CARVER, MODID);
+    public static final DeferredHolder<WorldCarver<?>, WorldCarver<?>> LABYRINTH = CARVERS.register("labyrinth", () -> new LabyrinthWorldCarver(LabyrinthCarverConfiguration.CODEC));
 
 
 
     public static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
-    public static final RegistryObject<MapCodec<? extends ChunkGenerator>> LABYRINTH_GEN = CHUNK_GENERATOR.register("labyrinth", () -> {
+    public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> LABYRINTH_GEN = CHUNK_GENERATOR.register("labyrinth", () -> {
            ExampleMod.LOGGER.info("Chunk Generator registration");
            return LabyrinthChunkGenerator.CODEC;
     });
@@ -60,16 +78,14 @@ public class ExampleMod
 //    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
 //            .alwaysEat().nutrition(1).saturationMod(2f).build())));
 
-    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
 //            .icon(() -> EXAMPLE_BLOCK_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
             }).build());
 
-    public ExampleMod()
+    public ExampleMod(IEventBus modEventBus, ModContainer modContainer)
     {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
         LOGGER.warn("enqueue dataSetup");
         modEventBus.addListener(ExampleData::dataSetup);
 
@@ -83,11 +99,11 @@ public class ExampleMod
         CARVERS.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
 
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
 
         modEventBus.addListener(this::addCreative);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -95,7 +111,7 @@ public class ExampleMod
         LOGGER.info("HELLO FROM COMMON SETUP");
 
         if (Config.logDirtBlock)
-            LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT));
+            LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
 
         LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
 
@@ -105,8 +121,8 @@ public class ExampleMod
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
         if (event.getTabKey() == EXAMPLE_TAB.getKey()) {
-            for(RegistryObject<Item> item : ExampleBlocks.ITEMS.getEntries()) {
-                event.accept(item);
+            for(DeferredHolder<Item, ? extends Item> item : ExampleBlocks.ITEMS.getEntries()) {
+                event.accept((ItemLike) item);
             }
         }
 //
@@ -118,7 +134,7 @@ public class ExampleMod
         LOGGER.info("HELLO from server starting");
     }
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
         @SubscribeEvent
