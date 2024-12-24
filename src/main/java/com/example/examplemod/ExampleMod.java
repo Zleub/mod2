@@ -122,7 +122,7 @@ public class ExampleMod
     {
         if (event.getTabKey() == EXAMPLE_TAB.getKey()) {
             for(DeferredHolder<Item, ? extends Item> item : ExampleBlocks.ITEMS.getEntries()) {
-                event.accept((ItemLike) item);
+                event.accept(item.value());
             }
         }
 //
