@@ -37,11 +37,11 @@ public class ExampleNoiseSettings {
         context.register(LABYRINTH, new NoiseGeneratorSettings(
                 NoiseSettings.create(
                         0, // minY
-                        16, // height
+                        32, // height
                         1, // noiseSizeHorizontal
                         4 // noiseSizeVertical
                 ),
-                blocks.getOrThrow(ExampleBlocks.YELLOW_WALLPAPER).value().defaultBlockState(),
+                blocks.getOrThrow(ExampleBlocks.PLAIN_WALLPAPER).value().defaultBlockState(),
                 Blocks.WATER.defaultBlockState(),
                 new NoiseRouter(
                         DensityFunctions.zero(), // barrierNoise

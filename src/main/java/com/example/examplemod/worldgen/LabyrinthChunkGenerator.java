@@ -296,7 +296,7 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
 
     static {
         for (NoiseStack ns : noise_stack) {
-            ns.makeIMG(1024, 1024);
+            ns.makeIMG(64, 64);
         }
     }
 
@@ -352,7 +352,7 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
         }, Util.backgroundExecutor().forName("wgen_fill_noise"));
     }
 
-    private ChunkAccess doFill(Blender blender, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess, int minSectionIndex, int sectionHeight) {
+    private ChunkAccess doFill(Blender blender, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess, int minCellY, int cellCountY) {
         ChunkPos chunkPosition = chunkAccess.getPos();
 
         double middleX = chunkPosition.getMiddleBlockX();
@@ -368,132 +368,100 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
         NoiseSettings noisesettings = this.generatorSettings().value().noiseSettings();
         int minY = noisesettings.minY();
         int height = noisesettings.height();
+        int l = 16; // ?? noisechunk.cellHeight();
+
         ArrayList<Vec3i> stack = new ArrayList<>();
 
+        ExampleMod.LOGGER.info("getSectionsCount: {}", chunkAccess.getSectionsCount());
+        ExampleMod.LOGGER.info("minCellY: {}", minCellY);
+        ExampleMod.LOGGER.info("cellCountY: {}", cellCountY);
 
-        int i2 = chunkAccess.getSectionsCount() - 1;
-        LevelChunkSection levelchunksection = chunkAccess.getSection(i2);
-
-        for (int x = chunkPosition.getMinBlockX(); x <= chunkPosition.getMaxBlockX(); x++) {
-            for (int z = chunkPosition.getMinBlockZ(); z <= chunkPosition.getMaxBlockZ(); z++) {
-//                double value = resolve(x, z);
-//                value = value_formula(value);
-                double value = basic.resolve(x, z);
-//                ExampleMod.LOGGER.info("Value: {}", value);
-
-                Block small_wallpaper = (x % 3 == 0 && z % 3 == 0) ? BuiltInRegistries.BLOCK.getValue(ExampleBlocks.YELLOW_WALLPAPER.location()) : BuiltInRegistries.BLOCK.getValue(ExampleBlocks.PLAIN_WALLPAPER.location());
-
-                for (int y = minY;  y < minY + 3; y++) {
-                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
-//                    heightmap.update(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock());
-//                    heightmap1.update(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock());
-                }
-
-//                if (passthrough(value)) {
-//                    for (int y = minY + 3;  y < height; y++) {
-//                        levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
-////                        heightmap.update(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock());
-////                        heightmap1.update(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock());
-//                    }
+//        int i2 = chunkAccess.getSectionsCount() - 1;
+//        LevelChunkSection levelchunksection = chunkAccess.getSection(cellCountY);
+//        ExampleMod.LOGGER.info("i2: {}", i2);
+//        for (int j2 = cellCountY - 1; j2 >= 0; j2--) {
+//            for (int k2 = l - 1; k2 >= 0; k2--) {
+//                int l2 = (minCellY + j2) * l + k2;
+//                int j3 = chunkAccess.getSectionIndex(l2);
+//                if (i2 != j3) {
+//                    i2 = j3;
+//                    levelchunksection = chunkAccess.getSection(j3);
+//                    ExampleMod.LOGGER.info("j3: {}", j3);
 //                }
+//            levelchunksection = chunkAccess.getSection(i);
 
-//                if ((int)value != 2) {
-                    for (int y = minY + 3;  y < (height - 3) * value; y++) {
-                        levelchunksection.setBlockState(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState(), false);
-//                        heightmap.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
-//                        heightmap1.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+                for (int x = chunkPosition.getMinBlockX(); x <= chunkPosition.getMaxBlockX(); x++) {
+                    for (int z = chunkPosition.getMinBlockZ(); z <= chunkPosition.getMaxBlockZ(); z++) {
+                        double value = basic.resolve(x, z);
+
+                        Block small_wallpaper = Blocks.WHITE_STAINED_GLASS;
+
+                        int abs_x = Math.abs(x);
+                        int abs_z = Math.abs(z);
+
+                        if (x < 0)
+                            abs_x -= 1;
+                        if (z < 0)
+                            abs_z -= 1;
+
+                        small_wallpaper = ((abs_x % 16) % 3 == 0 && (abs_z % 16) % 3 == 0) ?
+                                BuiltInRegistries.BLOCK.getValue(ExampleBlocks.YELLOW_WALLPAPER.location()) :
+                                BuiltInRegistries.BLOCK.getValue(ExampleBlocks.PLAIN_WALLPAPER.location());
+
+                        for (int i = cellCountY - 1; i >= 0 ; i--) {
+                            LevelChunkSection levelchunksection = chunkAccess.getSection(i);
+                            for (int y = 15; y >= 0 ; y--) {
+                                int absolute_y = y + i * 16;
+
+                                if (absolute_y >= minY && absolute_y < minY + 2)
+                                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, Blocks.BEDROCK.defaultBlockState(), false);
+
+                                if (absolute_y >= minY + 2 && absolute_y <= minY + 3) {
+                                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
+                                }
+
+                                if (absolute_y > minY + 3 && absolute_y < 12 && value == 1)
+                                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState(), false);
+
+                                if (absolute_y >= 12 && absolute_y <= 14) {
+                                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
+                                }
+
+                                if (absolute_y >= 14 && absolute_y <= 15) {
+                                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, Blocks.BEDROCK.defaultBlockState(), false);
+                                }
+                            }
+                        }
+//
+//                        for (int y = minY; y < minY + 3; y++) {
+//                            levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
+////                    heightmap.update(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock());
+////                    heightmap1.update(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock());
+//                        }
+//
+//                        for (int y = minY + 3; y < (height - 3) * value; y++) {
+//                            levelchunksection.setBlockState(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState(), false);
+////                        heightmap.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+////                        heightmap1.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+//                        }
+//
+//                        for (int y = (int) ((height - 3) * value) + minY + 3; y < height - 3; y++) {
+//                            levelchunksection.setBlockState(x & 15, y & 15, z & 15, Blocks.AIR.defaultBlockState(), false);
+////                    heightmap.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+////                    heightmap1.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+//                        }
+//                        for (int y = height - 3; y < height; y++) {
+//                            levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
+////                    heightmap.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+////                    heightmap1.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
+//                        }
+
                     }
-
-                for (int y = (int) ((height - 3) * value) + minY + 3; y < height - 1; y++) {
-                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, Blocks.AIR.defaultBlockState(), false);
-//                    heightmap.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
-//                    heightmap1.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
-                }
-                for (int y = height - 1; y < height + 5; y++) {
-                    levelchunksection.setBlockState(x & 15, y & 15, z & 15, this.generatorSettings().value().defaultBlock(), false);
-//                    heightmap.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
-//                    heightmap1.update(x & 15, y & 15, z & 15, small_wallpaper.defaultBlockState());
-                }
 //                }
-//                    p = (255 << 24) | (255 << 16) | (0 << 8) | 0;
-//                else {
-//                    int up = (int)value_formula(resolve(x, z - 1));
-//                    int down = (int)value_formula(resolve(x, z + 1));
-//                    int left = (int)value_formula(resolve(x - 1, z));
-//                    int right = (int)value_formula(resolve(x + 1, z));
 //
-//                    if ((up != 2 || down != 2) && (left != 2 || right != 2)) {
-////                        stack.add(new Pair<Integer, Integer>(x, z));
-//                        stack.add(new Vec3i(x, z - 1, 0));
-//                        stack.add(new Vec3i(x, z + 1, 0));
-//                        stack.add(new Vec3i(x - 1, z, 0));
-//                        stack.add(new Vec3i(x + 1, z, 0));
-//
-//                    }
-//                }
-            }
+//            }
         }
 
-//        while (!stack.isEmpty()) {
-////            ExampleMod.LOGGER.info("stack length {}", stack.size());
-//            Vec3i coords = stack.removeFirst();
-//
-//            int first = coords.getX();
-//            int second = coords.getY();
-//            int third = coords.getZ();
-//
-//
-////            BufferedImage finalImage = image;
-//            IntBinaryOperator valueFromData = (int localX, int localZ) -> {
-//                int rgb = 0;
-//                try {
-////                    int imgX = (localX + (width / pixel_size) / 2) * pixel_size;
-////                    int imgZ = (localZ + (height / pixel_size) / 2) * pixel_size;
-////                    ExampleMod.LOGGER.info("[{},{}] -> [{}, {}]", localX, localZ, imgX, imgZ);
-////                    rgb = finalImage.getRGB(imgX, imgZ);
-//                    return heightmap1.getFirstAvailable(localX & 15, localZ & 15);
-//                } catch (ArrayIndexOutOfBoundsException e) {
-////                    ExampleMod.LOGGER.info("catch");
-//                }
-//                return rgb;
-//            };
-//
-//            int local = valueFromData.applyAsInt(first, second);
-//
-//            int up = valueFromData.applyAsInt(first, second - 1);
-//            int down = valueFromData.applyAsInt(first, second + 1);
-//            int left = valueFromData.applyAsInt(first - 1, second);
-//            int right = valueFromData.applyAsInt(first + 1, second);
-//
-//            ExampleMod.LOGGER.info("local:{}", local);
-//            ExampleMod.LOGGER.info("up:{} down:{} left:{} right:{}", up, down, left, right);
-//
-//            if (third < 12 && local == 16 && (up == 3 || down == 3) && (left == 3 || right == 3)) {
-//                for (int y = minY + 3;  y < height; y++) {
-//                    levelchunksection.setBlockState(first & 15, y & 15, second & 15, Blocks.AIR.defaultBlockState(), false);
-//                    heightmap.update(first & 15, y & 15, second & 15, Blocks.AIR.defaultBlockState());
-//                    heightmap1.update(first & 15, y & 15, second & 15, Blocks.AIR.defaultBlockState());
-//
-////                    levelchunksection.setBlockState(first & 15, y & 15, second & 15, Blocks.AIR.defaultBlockState(), false);
-////                    heightmap.update(first & 15, y & 15, second & 15, Blocks.AIR.defaultBlockState());
-////                    heightmap1.update(first & 15, y & 15, second & 15, Blocks.AIR.defaultBlockState());
-//                }
-////                int p = (255 << 24) | (255 << 16) | (0 << 8) | 0;
-//
-////                int[] pixs = new int[pixel_size * pixel_size];
-////                for (int i = 0; i < pixel_size * pixel_size; i++) {
-////                    pixs[i] = p;
-////                }
-////                try {
-////                    image.setRGB((first + (width / pixel_size) / 2) * pixel_size, (second + (height / pixel_size) / 2) * pixel_size, pixel_size, pixel_size, pixs, 0, pixel_size);
-////                } catch (ArrayIndexOutOfBoundsException e) {}
-//
-//                stack.add(new Vec3i(first, second - 1, third + 1));
-//                stack.add(new Vec3i(first, second + 1, third + 1));
-//                stack.add(new Vec3i(first + 1, second, third + 1));
-//                stack.add(new Vec3i(first - 1, second, third + 1));
-//            }
-//        }
 
         return chunkAccess;
     }

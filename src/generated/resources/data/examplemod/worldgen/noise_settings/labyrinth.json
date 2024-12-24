@@ -1,10 +1,7 @@
 {
   "aquifers_enabled": false,
   "default_block": {
-    "Name": "examplemod:small_yellow_wallpaper",
-    "Properties": {
-      "axis": "y"
-    }
+    "Name": "examplemod:basic_yellow_wallpaper"
   },
   "default_fluid": {
     "Name": "minecraft:water",
@@ -15,7 +12,7 @@
   "disable_mob_generation": false,
   "legacy_random_source": false,
   "noise": {
-    "height": 16,
+    "height": 32,
     "min_y": 0,
     "size_horizontal": 1,
     "size_vertical": 4

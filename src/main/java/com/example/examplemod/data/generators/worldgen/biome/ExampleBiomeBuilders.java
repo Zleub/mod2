@@ -1,5 +1,6 @@
 package com.example.examplemod.data.generators.worldgen.biome;
 
+import com.example.examplemod.data.generators.ExamplePlacedFeatures;
 import com.example.examplemod.data.generators.worldgen.configured_carver.ExampleConfiguredCarvers;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.HolderGetter;
@@ -37,7 +38,10 @@ public class ExampleBiomeBuilders {
 //                        .backgroundMusic(new Music(AetherSoundEvents.MUSIC_AETHER.getHolder().orElseThrow(), 12000, 24000, true))
                         .build())
                 .mobSpawnSettings(new MobSpawnSettings.Builder().build())
-                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers).build())
+                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
+                        .addFeature(GenerationStep.Decoration.RAW_GENERATION, ExamplePlacedFeatures.TEST_VEIN)
+                        .addFeature(GenerationStep.Decoration.RAW_GENERATION, ExamplePlacedFeatures.TEST_SCULK)
+                        .build())
 //                        .addCarver(ExampleGenerationStep.Carving.AIR, worldCarvers.getOrThrow(Carvers.CAVE)).build())
 //                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers).build())
 //                .generationSettings(new BiomeGenerationSettings.PlainBuilder().build())
