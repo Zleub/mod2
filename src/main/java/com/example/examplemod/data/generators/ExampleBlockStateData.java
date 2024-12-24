@@ -1,13 +1,10 @@
 package com.example.examplemod.data.generators;
 
 import com.example.examplemod.ExampleBlocks;
-import com.example.examplemod.ExampleMod;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -29,17 +26,17 @@ public class ExampleBlockStateData extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        for (DeferredHolder<Block, Block> entry : ExampleBlocks.SIMPLE_BLOCK_LIST) {
+        for (DeferredHolder<Block, Block> entry : ExampleBlocks.BLOCK_LIST) {
             Block block = entry.get();
-            this.simpleBlockWithItem(block, cubeAll(block));
+            this.simpleBlock(block, cubeAll(block));
         }
 
-        for (DeferredHolder<Block, RotatedPillarBlock> entry : ExampleBlocks.ROTATED_BLOCK_LIST) {
+        for (DeferredBlock<RotatedPillarBlock> entry : ExampleBlocks.ROTATED_BLOCK_LIST) {
             RotatedPillarBlock block = entry.get();
             this.axisBlock(block);
 
-            ResourceLocation resourceLocation = blockTexture(block);
-            this.simpleBlockItem(block, this.itemModels().cubeColumn(resourceLocation.toString(), extend(resourceLocation, "_side"), extend(resourceLocation, "_end")));
+//            ResourceLocation resourceLocation = blockTexture(block);
+//            this.simpleBlockItem(block, this.itemModels().cubeColumn(resourceLocation.toString(), extend(resourceLocation, "_side"), extend(resourceLocation, "_end")));
         }
     }
 }
