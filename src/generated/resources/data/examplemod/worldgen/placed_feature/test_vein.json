@@ -1,0 +1,25 @@
+{
+  "feature": "examplemod:test_vein",
+  "placement": [
+    {
+      "type": "minecraft:fixed_placement",
+      "positions": [
+        [
+          50,
+          30,
+          50
+        ],
+        [
+          55,
+          4,
+          55
+        ],
+        [
+          60,
+          6,
+          60
+        ]
+      ]
+    }
+  ]
+}

@@ -21,8 +21,8 @@ public class ExampleRegistrySets extends DatapackBuiltinEntriesProvider {
 //            .buildPatch()
 //            .buildPatch(Registries.BLOCK, ExampleMod::bootstrapBlocks)
 
-//            .add(Registries.CONFIGURED_FEATURE, AetherConfiguredFeatures::bootstrap)
-//            .add(Registries.PLACED_FEATURE, AetherPlacedFeatures::bootstrap)
+            .add(Registries.CONFIGURED_FEATURE, ExampleConfiguredFeature::bootstrap)
+            .add(Registries.PLACED_FEATURE, ExamplePlacedFeatures::bootstrap)
 
 //            .add(Registries.DENSITY_FUNCTION, ExampleDensityFunction::bootstrap)
 //            .add(Registries.NOISE, ExampleNoises::bootstrap)
