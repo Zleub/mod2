@@ -1,6 +1,7 @@
 package com.example.examplemod;
 
 import com.example.examplemod.data.ExampleData;
+import com.example.examplemod.worldgen.ExampleFeaturesList;
 import com.example.examplemod.worldgen.carver.LabyrinthCarverConfiguration;
 import com.example.examplemod.worldgen.LabyrinthChunkGenerator;
 import com.example.examplemod.worldgen.carver.LabyrinthWorldCarver;
@@ -93,7 +94,8 @@ public class ExampleMod
         modEventBus.addListener(this::commonSetup);
 
         ExampleBlocks.BLOCKS.register(modEventBus);
-        ExampleBlocks.ITEMS.register(modEventBus);
+        ExampleItems.ITEMS.register(modEventBus);
+        ExampleFeaturesList.FEATURES.register(modEventBus);
 
         CHUNK_GENERATOR.register(modEventBus);
         CARVERS.register(modEventBus);
@@ -121,7 +123,7 @@ public class ExampleMod
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
         if (event.getTabKey() == EXAMPLE_TAB.getKey()) {
-            for(DeferredHolder<Item, ? extends Item> item : ExampleBlocks.ITEMS.getEntries()) {
+            for(DeferredHolder<Item, ? extends Item> item : ExampleItems.ITEMS.getEntries()) {
                 event.accept(item.value());
             }
         }

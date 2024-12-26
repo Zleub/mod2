@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column_horizontal",
-  "textures": {
-    "end": "examplemod:block/small_yellow_wallpaper_bordered_end",
-    "side": "examplemod:block/small_yellow_wallpaper_bordered_side"
-  }
-}

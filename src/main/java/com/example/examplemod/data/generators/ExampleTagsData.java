@@ -21,10 +21,10 @@ public class ExampleTagsData extends TagsProvider<Block> {
 
     @Override
     protected void addTags(HolderLookup.Provider p_256380_) {
-        for (DeferredBlock<Block> b : ExampleBlocks.BLOCK_LIST) {
-            this.tag(BlockTags.OVERWORLD_CARVER_REPLACEABLES).add(b.getKey());
-            this.tag(BlockTags.SCULK_REPLACEABLE).add(b.getKey());
-            this.tag(BlockTags.SCULK_REPLACEABLE_WORLD_GEN).add(b.getKey());
-        }
+//        for (DeferredBlock<Block> b : ExampleBlocks.BLOCK_LIST) {
+//            this.tag(BlockTags.OVERWORLD_CARVER_REPLACEABLES).add(b.getKey());
+//            this.tag(BlockTags.SCULK_REPLACEABLE).add(b.getKey());
+//            this.tag(BlockTags.SCULK_REPLACEABLE_WORLD_GEN).add(b.getKey());
+//        }
     }
 }
