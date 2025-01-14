@@ -6,7 +6,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 //import net.minecraftforge.common.Tags;
 //import net.minecraftforge.common.data.ExistingFileHelper;
@@ -19,13 +18,13 @@ public class ExampleData {
         ExampleMod.LOGGER.warn("dataSetup");
 
         DataGenerator generator = event.getGenerator();
-        ExistingFileHelper fileHelper = event.getExistingFileHelper();
+//        ExistingFileHelper fileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         PackOutput packOutput = generator.getPackOutput();
 
         event.addProvider(new ExampleModels(packOutput, ExampleMod.MODID));
         event.addProvider(new ExampleRegistrySets(packOutput, lookupProvider));
-        event.addProvider(new ExampleTagsData(packOutput, BlockTags.OVERWORLD_CARVER_REPLACEABLES.registry(), lookupProvider, ExampleMod.MODID, fileHelper));
+        event.addProvider(new ExampleTagsData(packOutput, BlockTags.OVERWORLD_CARVER_REPLACEABLES.registry(), lookupProvider, ExampleMod.MODID));
 
         // pack.mcmeta
 //        PackMetadataGenerator packMeta = new PackMetadataGenerator(packOutput);
