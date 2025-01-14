@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "examplemod:block/basic_yellow_wallpaper",
+    "side": "examplemod:block/yellow_bookshelf"
+  }
+}

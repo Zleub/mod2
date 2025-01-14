@@ -17,6 +17,8 @@ public class ExampleItems {
         simpleBlockItemList.add(ExampleBlocks.PLAIN_WALLPAPER_STAIRS);
         simpleBlockItemList.add(ExampleBlocks.YELLOW_WALLPAPER);
         simpleBlockItemList.add(ExampleBlocks.YELLOW_WALLPAPER_BORDERED);
+        simpleBlockItemList.add(ExampleBlocks.YELLOW_BOOKSHELF);
+        simpleBlockItemList.add(ExampleBlocks.YELLOW_SHELF);
 
         simpleBlockItemList.forEach((block) ->
             ITEMS.registerSimpleBlockItem(block.getId().getPath(), block, new Item.Properties())
