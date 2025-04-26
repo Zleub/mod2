@@ -11,8 +11,11 @@
     "water_fog_color": 329011
   },
   "features": [
+    [],
+    [],
+    [],
+    [],
     [
-      "examplemod:test_vein",
       "examplemod:test_sculk"
     ]
   ],

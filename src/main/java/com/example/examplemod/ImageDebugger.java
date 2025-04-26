@@ -49,10 +49,10 @@ public class ImageDebugger {
 
     int pixel_size = 4;
     int debug_width = 32;
-    int fullstep_override = 0;
+    int fullstep_override = -1;
 
-    public ImageDebugger(String fileName, int minX, int maxX, int minZ, int maxZ) {
-        this.file = new File("logs\\" + fileName);
+    public ImageDebugger(String fileName, int minX, int maxX, int minZ, int maxZ, int stepNb) {
+        this.file = new File("logs_noise\\" + fileName);
         this.minX = minX;
         this.maxX = maxX;
         this.minZ = minZ;
@@ -60,6 +60,8 @@ public class ImageDebugger {
         this.width = (maxX - minX) * pixel_size ;
         this.height = (maxZ - minZ) * pixel_size;
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        debug_width = (maxX - minX) / stepNb;
 
         ExampleMod.LOGGER.info("ImageDebugger x: {} -> {} | z: {} -> {} | pixel_size: {} | width: {} | height: {}", minX, maxX, minZ, maxZ, pixel_size, width, height);
     }
@@ -81,12 +83,18 @@ public class ImageDebugger {
                 putPixel(orthoX, orthoZ, color);
             }
         }
-        else if ((orthoX >= debug_width * this.step) && (orthoX < debug_width * (this.step + 1))) {
+        else if (orthoX < debug_width) {
             Object colorKey = colorKeySet.toArray()[this.step];
             int color = colorMap.get(colorKey).apply((value + minRange) / maxRange);
 
-            putPixel(orthoX, orthoZ, color);
+            putPixel(orthoX + debug_width * step, orthoZ, color);
         }
+//        else if ((orthoX >= debug_width * this.step) && (orthoX < debug_width * (this.step + 1))) {
+//            Object colorKey = colorKeySet.toArray()[this.step];
+//            int color = colorMap.get(colorKey).apply((value + minRange) / maxRange);
+//
+//            putPixel(orthoX, orthoZ, color);
+//        }
 
         if (x % 16 == 0 || z % 16 == 0) {
             image.setRGB(orthoX * pixel_size, orthoZ * pixel_size, (255 << 24) | (255 << 16) | (255 << 8) | (0));

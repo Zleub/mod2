@@ -1,23 +1,16 @@
-package com.example.examplemod.data.generators;
+package com.example.examplemod.data.generators.worldgen;
 
 import com.example.examplemod.ExampleBlocks;
 import com.example.examplemod.ExampleMod;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.*;
-import net.minecraft.world.level.levelgen.synth.NormalNoise;
-
-import java.util.List;
 
 public class ExampleNoiseSettings {
     public static final ResourceKey<NoiseGeneratorSettings> LABYRINTH = createKey("labyrinth");
@@ -41,7 +34,7 @@ public class ExampleNoiseSettings {
                         1, // noiseSizeHorizontal
                         4 // noiseSizeVertical
                 ),
-                blocks.getOrThrow(ExampleBlocks.PLAIN_WALLPAPER).value().defaultBlockState(),
+                blocks.getOrThrow(ExampleBlocks.PLAIN_WALLPAPER.getKey()).value().defaultBlockState(),
                 Blocks.WATER.defaultBlockState(),
                 new NoiseRouter(
                         DensityFunctions.zero(), // barrierNoise
@@ -60,10 +53,12 @@ public class ExampleNoiseSettings {
                         DensityFunctions.zero(), // veinRidged
                         DensityFunctions.zero()  // veinGap
                 ),
+//                SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SurfaceRules.state(Blocks.BEDROCK.defaultBlockState())),
+//                SurfaceRules.UNDER_FLOOR,
                 SurfaceRules.sequence(
-                        SurfaceRules.ifTrue(
-                                SurfaceRules.yBlockCheck(VerticalAnchor.absolute(14), 0),
-                                SurfaceRules.state(Blocks.BEDROCK.defaultBlockState())),
+//                        SurfaceRules.ifTrue(
+//                                SurfaceRules.yBlockCheck(VerticalAnchor.absolute(14), 0),
+//                                SurfaceRules.state(Blocks.BEDROCK.defaultBlockState())),
                         SurfaceRules.ifTrue(
                                 SurfaceRules.not(SurfaceRules.yBlockCheck(VerticalAnchor.absolute(2), 0)),
                                 SurfaceRules.state(Blocks.BEDROCK.defaultBlockState())
