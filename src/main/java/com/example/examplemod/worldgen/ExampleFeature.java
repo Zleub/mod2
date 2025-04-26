@@ -71,12 +71,10 @@ public class ExampleFeature extends Feature<NoneFeatureConfiguration> {
 //
 //            ExampleMod.LOGGER.info("k: {}", k);
 
-            BlockPos blockpos2 = structuretemplate.getZeroPositionWithTransform(blockpos.atY(4), Mirror.NONE, rotation
-            );
+            BlockPos blockpos2 = structuretemplate.getZeroPositionWithTransform(blockpos.atY(4), Mirror.NONE, rotation);
 
             boolean result = structuretemplate.placeInWorld(worldgenlevel, blockpos2, blockpos2, new StructurePlaceSettings(), randomsource, 4);
             ExampleMod.LOGGER.info("placeInWorld: {}", result);
-//        StructureTemplate structuretemplate1 = structuretemplatemanager.getOrCreate((ResourceLocation)fossilfeatureconfiguration.overlayStructures.get(i));
             return true;
         }
     }

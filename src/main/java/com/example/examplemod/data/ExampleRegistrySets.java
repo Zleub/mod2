@@ -1,16 +1,17 @@
-package com.example.examplemod.data.generators;
+package com.example.examplemod.data;
 
+import com.example.examplemod.data.generators.worldgen.ExampleConfiguredFeature;
+import com.example.examplemod.data.generators.worldgen.ExampleNoiseSettings;
+import com.example.examplemod.data.generators.worldgen.ExamplePlacedFeatures;
+import com.example.examplemod.data.generators.worldgen.ExampleStructureSet;
 import com.example.examplemod.data.generators.worldgen.biome.ExampleBiomes;
 import com.example.examplemod.data.generators.dimension.ExampleDimensions;
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.data.generators.worldgen.configured_carver.ExampleConfiguredCarvers;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.neoforged.neoforge.common.data.DatapackBuiltinEntriesProvider;
 //import net.minecraftforge.common.data.DatapackBuiltinEntriesProvider;
 
@@ -32,7 +33,7 @@ public class ExampleRegistrySets extends DatapackBuiltinEntriesProvider {
             .add(Registries.LEVEL_STEM, ExampleDimensions::bootstrapLevelStem)
             .add(Registries.BIOME, ExampleBiomes::bootstrap);
 //            .add(Registries.STRUCTURE, AetherStructures::bootstrap)
-//            .add(Registries.STRUCTURE_SET, AetherStructureSets::bootstrap)
+//            .add(Registries.STRUCTURE_SET, ExampleStructureSet::bootstrap);
 //            .add(Registries.DAMAGE_TYPE, AetherDamageTypes::bootstrap)
 //            .add(Registries.TRIM_MATERIAL, AetherTrimMaterials::bootstrap)
 

@@ -319,7 +319,7 @@ public class LabyrinthWorldCarver extends WorldCarver<LabyrinthCarverConfigurati
 //        if (!this.canReplaceBlock(carverConfiguration, blockState) && !isDebugEnabled(carverConfiguration)) {
 //            return false;
 //        } else {
-            chunkAccess.setBlockState(chunkMiddle, Blocks.AIR.defaultBlockState(), false);
+            chunkAccess.setBlockState(chunkMiddle, Blocks.AIR.defaultBlockState());
             return true;
 
 

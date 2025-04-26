@@ -1,4 +1,4 @@
-package com.example.examplemod.data.generators;
+package com.example.examplemod.data.generators.worldgen;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
