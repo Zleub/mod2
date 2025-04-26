@@ -1,27 +1,25 @@
 package com.example.examplemod;
 
+import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 //import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import static net.minecraft.world.level.block.Blocks.CAULDRON;
 //import net.minecraftforge.registries.DeferredRegister;
 //import net.minecraftforge.registries.ForgeRegistries;
 //import net.minecraftforge.registries.RegistryObject;
 
-import java.util.ArrayList;
 
 public class ExampleBlocks {
-    static public ResourceKey<Block> test = createKey("test");
-
     private static ResourceKey<Block> createKey(String name) {
         ResourceLocation rl = ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, name);
         return ResourceKey.create(Registries.BLOCK, rl);
@@ -54,4 +52,33 @@ public class ExampleBlocks {
             Block::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.YELLOW_CONCRETE)
     );
+
+    public static final DeferredBlock<Block> STRANGE_MUD = BLOCKS.registerBlock("strange_mud",
+            Block::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.MUD)
+    );
+
+//    public static final DeferredBlock<LiquidBlock> ACID = registerWithoutItem("acid", (properties) -> new AcidLiquidBlock(AetherIIFluids.ACID.get(), properties), () -> Block.Properties.of().mapColor(MapColor.FIRE).replaceable().noCollission().randomTicks().strength(100.0F).lightLevel(AetherIIBlocks::lightLevel8).pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+
+    public static final DeferredBlock<LiquidBlock> ALMOND_MILK = BLOCKS.registerBlock("almond_milk",
+            (properties) -> new LiquidBlock(ExampleFluids.ALMOND_MILK.get(), properties),
+            Block.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .replaceable()
+                    .noCollission()
+                    .randomTicks()
+                    .strength(100.0F)
+                    .pushReaction(PushReaction.DESTROY)
+                    .noLootTable()
+                    .liquid()
+                    .sound(SoundType.EMPTY)
+    );
+//    public static final DeferredBlock<LiquidBlock> ACID = registerWithoutItem("acid",
+//            (properties) -> new AcidLiquidBlock(AetherIIFluids.ACID.get(), properties),
+//            () -> Block.Properties.of().mapColor(MapColor.FIRE).replaceable().noCollission().randomTicks().strength(100.0F).lightLevel(AetherIIBlocks::lightLevel8).pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
+
+//    public static final DeferredBlock<Block> ALMOND_CAULDRON = BLOCKS.registerBlock("almond_milk_cauldron",
+//            (properties) -> new LayeredCauldronBlock(Biome.Precipitation.NONE, CauldronInteraction.WATER, properties),
+//            BlockBehaviour.Properties.ofLegacyCopy(CAULDRON));
+
 }

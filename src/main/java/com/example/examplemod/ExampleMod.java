@@ -1,5 +1,6 @@
 package com.example.examplemod;
 
+import com.example.examplemod.client.ExampleClient;
 import com.example.examplemod.data.ExampleData;
 import com.example.examplemod.worldgen.ExampleFeaturesList;
 import com.example.examplemod.worldgen.carver.LabyrinthCarverConfiguration;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.levelgen.carver.WorldCarver;
 //import net.minecraftforge.registries.DeferredRegister;
 //import net.minecraftforge.registries.ForgeRegistries;
 //import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -58,13 +60,11 @@ public class ExampleMod
 //    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 //    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-
+    public static final DeferredRegister<Structure> STRUCTURES = DeferredRegister.create(Registries.STRUCTURE, MODID);
+//    public static final DeferredHolder<Structure, Structure> s = STRUCTURES.register("test_room", )
 
     public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(Registries.CARVER, MODID);
     public static final DeferredHolder<WorldCarver<?>, WorldCarver<?>> LABYRINTH = CARVERS.register("labyrinth", () -> new LabyrinthWorldCarver(LabyrinthCarverConfiguration.CODEC));
-
-
 
     public static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
     public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> LABYRINTH_GEN = CHUNK_GENERATOR.register("labyrinth", () -> {
@@ -79,13 +79,14 @@ public class ExampleMod
 //    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
 //            .alwaysEat().nutrition(1).saturationMod(2f).build())));
 
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
 //            .icon(() -> EXAMPLE_BLOCK_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
             }).build());
 
-    public ExampleMod(IEventBus modEventBus, ModContainer modContainer)
+    public ExampleMod(IEventBus modEventBus, ModContainer modContainer, Dist dist)
     {
         LOGGER.warn("enqueue dataSetup");
         modEventBus.addListener(ExampleData::dataSetup);
@@ -95,6 +96,9 @@ public class ExampleMod
 
         ExampleBlocks.BLOCKS.register(modEventBus);
         ExampleItems.ITEMS.register(modEventBus);
+        ExampleFluids.FLUID_TYPES.register(modEventBus);
+        ExampleFluids.FLUIDS.register(modEventBus);
+
         ExampleFeaturesList.FEATURES.register(modEventBus);
 
         CHUNK_GENERATOR.register(modEventBus);
@@ -106,6 +110,10 @@ public class ExampleMod
         modEventBus.addListener(this::addCreative);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+
+        if (dist == Dist.CLIENT) {
+            ExampleClient.clientInit(modEventBus);
+        }
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
