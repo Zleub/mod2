@@ -6,6 +6,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -16,6 +18,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import static com.example.examplemod.ExampleBlocks.ALMOND_CAULDRON;
 
 //import static com.example.examplemod.ExampleBlocks.ALMOND_CAULDRON;
 
@@ -35,7 +39,7 @@ public class ExampleFluids {
                             .viscosity(1024)
                             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
-//                            .addDripstoneDripping(0.1F, ParticleTypes.DRIPPING_WATER, ALMOND_CAULDRON.get(), SoundEvents.BUCKET_FILL)
+                            .addDripstoneDripping(0.1F, ParticleTypes.DRIPPING_WATER, ALMOND_CAULDRON.get(), SoundEvents.BUCKET_FILL)
             ));
 
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_ALMOND_MILK = FLUIDS.register("flowing_almond_milk", () -> new AlmondMilkFluid.Flowing(ExampleFluids.ALMOND_MILK_PROPERTIES));
@@ -48,6 +52,11 @@ public class ExampleFluids {
     abstract static class AlmondMilkFluid extends BaseFlowingFluid {
         protected AlmondMilkFluid(Properties properties) {
             super(properties);
+        }
+
+        @Override
+        public BlockState createLegacyBlock(FluidState fluidState) {
+            return ExampleBlocks.ALMOND_MILK.get().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(fluidState));
         }
 
         @Override

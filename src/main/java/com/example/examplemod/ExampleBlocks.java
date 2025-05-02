@@ -77,8 +77,8 @@ public class ExampleBlocks {
 //            (properties) -> new AcidLiquidBlock(AetherIIFluids.ACID.get(), properties),
 //            () -> Block.Properties.of().mapColor(MapColor.FIRE).replaceable().noCollission().randomTicks().strength(100.0F).lightLevel(AetherIIBlocks::lightLevel8).pushReaction(PushReaction.DESTROY).noLootTable().liquid().sound(SoundType.EMPTY));
 
-//    public static final DeferredBlock<Block> ALMOND_CAULDRON = BLOCKS.registerBlock("almond_milk_cauldron",
-//            (properties) -> new LayeredCauldronBlock(Biome.Precipitation.NONE, CauldronInteraction.WATER, properties),
-//            BlockBehaviour.Properties.ofLegacyCopy(CAULDRON));
+    public static final DeferredBlock<Block> ALMOND_CAULDRON = BLOCKS.registerBlock("almond_milk_cauldron",
+            (properties) -> new LayeredCauldronBlock(Biome.Precipitation.NONE, CauldronInteraction.WATER, properties),
+            BlockBehaviour.Properties.ofLegacyCopy(CAULDRON));
 
 }

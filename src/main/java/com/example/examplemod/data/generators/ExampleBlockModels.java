@@ -5,6 +5,8 @@ import com.example.examplemod.ExampleMod;
 import net.minecraft.client.data.models.*;
 import net.minecraft.client.data.models.blockstates.BlockModelDefinitionGenerator;
 
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.*;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -12,6 +14,8 @@ import net.minecraft.data.BlockFamily;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,6 +79,13 @@ public class ExampleBlockModels extends BlockModelGenerators {
 //        blockModels.copyModel(Blocks.WATER_CAULDRON, ExampleBlocks.ALMOND_CAULDRON.get());
 
 //        blockModels.copyModel(Blocks.WATER, ExampleBlocks.ALMOND_MILK.get());
+        this.blockStateOutput.accept(MultiVariantGenerator.dispatch(ExampleBlocks.ALMOND_CAULDRON.get())
+                .with(PropertyDispatch.initial(LayeredCauldronBlock.LEVEL)
+                    .select(1, plainVariant(ModelTemplates.CAULDRON_LEVEL1.createWithSuffix(ExampleBlocks.ALMOND_CAULDRON.get(), "_level1", TextureMapping.cauldron(ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "fluid/almond_milk_still")), this.modelOutput)))
+                    .select(2, plainVariant(ModelTemplates.CAULDRON_LEVEL2.createWithSuffix(ExampleBlocks.ALMOND_CAULDRON.get(), "_level2", TextureMapping.cauldron(ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "fluid/almond_milk_still")), this.modelOutput)))
+                    .select(3, plainVariant(ModelTemplates.CAULDRON_FULL.createWithSuffix(ExampleBlocks.ALMOND_CAULDRON.get(), "_full", TextureMapping.cauldron(ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "fluid/almond_milk_still")), this.modelOutput)))));
+
+//        this.create
     }
 
 }

@@ -1,6 +1,12 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "examplemod:item/almond_milk_bucket"
+    "type": "neoforge:fluid_container",
+    "fluid": "examplemod:almond_milk",
+    "textures": {
+      "base": "minecraft:bucket",
+      "cover": "neoforge:bucket_fluid_cover",
+      "fluid": "examplemod:fluid/almond_milk",
+      "particle": ":"
+    }
   }
 }
