@@ -24,7 +24,8 @@ public class ExampleData {
 
         event.addProvider(new ExampleModels(packOutput, ExampleMod.MODID));
         event.addProvider(new ExampleRegistrySets(packOutput, lookupProvider));
-        event.addProvider(new ExampleTagsData(packOutput, BlockTags.OVERWORLD_CARVER_REPLACEABLES.registry(), lookupProvider, ExampleMod.MODID));
+        event.addProvider(new BlocksTagsProvider(packOutput, lookupProvider, ExampleMod.MODID));
+//        event.addProvider(new ExampleTagsData(packOutput, BlockTags.OVERWORLD_CARVER_REPLACEABLES.registry(), lookupProvider, ExampleMod.MODID));
 
         // pack.mcmeta
 //        PackMetadataGenerator packMeta = new PackMetadataGenerator(packOutput);
