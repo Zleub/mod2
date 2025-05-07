@@ -1,12 +1,12 @@
-package com.example.examplemod;
+package com.example.examplemod.worldgen;
+
+import com.example.examplemod.ExampleMod;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.SequencedSet;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -52,6 +52,7 @@ public class ImageDebugger {
     int fullstep_override = -1;
 
     public ImageDebugger(String fileName, int minX, int maxX, int minZ, int maxZ, int stepNb) {
+        new File("logs_noise").mkdir();
         this.file = new File("logs_noise\\" + fileName);
         this.minX = minX;
         this.maxX = maxX;

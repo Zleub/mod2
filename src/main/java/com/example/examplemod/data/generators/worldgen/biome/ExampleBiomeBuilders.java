@@ -37,7 +37,7 @@ public class ExampleBiomeBuilders {
                 .mobSpawnSettings(new MobSpawnSettings.Builder().build())
                 .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers)
 //                        .addFeature(GenerationStep.Decoration.RAW_GENERATION, ExamplePlacedFeatures.TEST_VEIN)
-//                        .addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ExamplePlacedFeatures.TEST_SCULK)
+                        .addFeature(GenerationStep.Decoration.SURFACE_STRUCTURES, ExamplePlacedFeatures.SHELF_FEATURE_PLACED)
                         .build())
 //                        .addCarver(ExampleGenerationStep.Carving.AIR, worldCarvers.getOrThrow(Carvers.CAVE)).build())
 //                .generationSettings(new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers).build())

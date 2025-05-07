@@ -1,9 +1,7 @@
-package com.example.examplemod.worldgen;
+package com.example.examplemod.worldgen.chunk_generator;
 
 import com.example.examplemod.ExampleBlocks;
-import com.example.examplemod.ExampleMod;
-import com.example.examplemod.NoiseStack;
-import com.google.common.collect.ImmutableList;
+import com.example.examplemod.worldgen.NoiseStack;
 import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
@@ -12,15 +10,12 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.MossyCarpetBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -37,7 +32,6 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.function.Function;
 
 import static com.example.examplemod.ExampleMod.LOGGER;
@@ -319,8 +313,27 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
                                 return 0;
                         }
 
-                        return slope;
-                    }
+                        return slope; // * rooms.resolve(x_start, y_start);
+                    },
+//                    (d, x, y) -> {
+//                        int abs_x = Math.abs(x);
+//                        int abs_y = Math.abs(y);
+//
+//                        if (x < 0)
+//                            abs_x -= 1;
+//                        if (y < 0)
+//                            abs_y -= 1;
+//
+//                        int left_x = (int)Math.copySign(abs_x - mod(abs_x, 16), x);
+//                        int right_x = (int)Math.copySign(abs_x + (16 - mod(abs_x, 16)), x);
+//                        int lower_y = (int)Math.copySign(abs_y - mod(abs_y, 16), y);
+//                        int upper_y = (int)Math.copySign(abs_y + (16 - mod(abs_y, 16)), y);
+//
+//                        int x_start = x >= 0 ? left_x : right_x;
+//                        int y_start = y >= 0 ? lower_y : upper_y;
+//
+//                        return d * rooms.resolve(x_start, y_start);
+//                    }
             };
         }
     };
@@ -354,14 +367,77 @@ public class LabyrinthChunkGenerator extends NoiseBasedChunkGenerator {
         }
     };
 
+    static NoiseStack rooms = new NoiseStack(12L) {
+        public String getName() { return "rooms" + this.getNoise_zoom(); }
+
+        public double getX(int x) { return (x / this.getNoise_zoom()); }
+        public double getY(int y) { return (y / this.getNoise_zoom()); }
+
+        public double getValue(int x, int y) {
+            return (this.noise.getValue(this.getX(x), 12, this.getY(y)) + 1)/ 2;
+        }
+
+        public double getNoise_zoom() { return 4; }
+
+        @Override
+        public NoiseStack.Functor[] getStack() {
+            return new NoiseStack.Functor[]{
+//                d -> d + 1,
+//                d -> d / 2,
+//                    d -> (double) Math.round(d * 3) / 3,
+                    (d, x, y) -> d > 0.6 ? 1 : 0,
+                    (d, x, y) -> {
+                        int abs_x = Math.abs(x);
+                        int abs_y = Math.abs(y);
+
+                        if (x < 0)
+                            abs_x -= 1;
+                        if (y < 0)
+                            abs_y -= 1;
+
+                        int left_x = (int)Math.copySign(abs_x, x);
+                        int lower_y = (int)Math.copySign(abs_y, y);
+
+                        if (x % 16 != 0) {
+                            return rooms.resolve(x - 1, y);
+                        }
+                        if (y % 16 != 0) {
+                            return rooms.resolve(x, y - 1);
+                        }
+                        return d;
+                    }
+//                    (d, x, y) -> d * 100,
+//                    (d, x, y) -> Math.round(d) / 10.
+//                    (d, x, y) -> {
+//                        ArrayList<Vec3i> stack = new ArrayList<>();
+//
+//                        if (d == 0.5) {
+//                            stack.add( new Vec3i(x, 12, y) );
+//                        }
+////                        if (d == 0) {
+////                            double up = rooms.resolve(x - 1, y);
+////                            double down = rooms.resolve(x + 1, y);
+////                            double left = rooms.resolve(x,y - 1);
+////                            double right = rooms.resolve(x, y + 1);
+////
+////                            LOGGER.info("{} {} : {}", x, y, up + down + left + right);
+////                        }
+//
+//                        return d;
+//                    }
+            };
+        }
+    };
+
     public static NoiseStack[] noise_stack = new NoiseStack[] {
-        primitive_cos,
-        primitive_sin,
-        primitive_dot,
-        primitive_dot_altered,
-        test,
+//        primitive_cos,
+//        primitive_sin,
+//        primitive_dot,
+//        primitive_dot_altered,
+//        test,
+//        primitive_test,
         basic,
-        primitive_test
+        rooms
     };
 
     static {

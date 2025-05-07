@@ -1,5 +1,5 @@
 {
-  "feature": "examplemod:test_sculk",
+  "feature": "examplemod:shelf_feature",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
@@ -10,7 +10,11 @@
       "heightmap": "WORLD_SURFACE_WG"
     },
     {
-      "type": "minecraft:biome"
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:matching_blocks",
+        "blocks": "minecraft:air"
+      }
     }
   ]
 }

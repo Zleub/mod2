@@ -2,22 +2,12 @@ package com.example.examplemod;
 
 import com.example.examplemod.client.ExampleClient;
 import com.example.examplemod.data.ExampleData;
-import com.example.examplemod.worldgen.ExampleFeaturesList;
-import com.example.examplemod.worldgen.carver.LabyrinthCarverConfiguration;
-import com.example.examplemod.worldgen.LabyrinthChunkGenerator;
-import com.example.examplemod.worldgen.carver.LabyrinthWorldCarver;
 import com.mojang.logging.LogUtils;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.carver.WorldCarver;
 //import net.minecraftforge.api.distmarker.Dist;
 //import net.minecraftforge.common.MinecraftForge;
 //import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -47,10 +37,17 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.slf4j.Logger;
+
+import static com.example.examplemod.ExampleBlocks.BLOCKS;
+import static com.example.examplemod.ExampleFluids.FLUIDS;
+import static com.example.examplemod.ExampleFluids.FLUID_TYPES;
+import static com.example.examplemod.ExampleItems.ITEMS;
+import static com.example.examplemod.ExamplePotions.POTIONS;
+import static com.example.examplemod.worldgen.feature.ExampleFeaturesList.FEATURES;
+import static com.example.examplemod.worldgen.carver.ExampleCarvers.CARVERS;
+import static com.example.examplemod.worldgen.chunk_generator.ExampleChunkGenerator.CHUNK_GENERATOR;
 
 @Mod(ExampleMod.MODID)
 public class ExampleMod
@@ -63,28 +60,12 @@ public class ExampleMod
     public static final DeferredRegister<Structure> STRUCTURES = DeferredRegister.create(Registries.STRUCTURE, MODID);
 //    public static final DeferredHolder<Structure, Structure> s = STRUCTURES.register("test_room", )
 
-    public static final DeferredRegister<WorldCarver<?>> CARVERS = DeferredRegister.create(Registries.CARVER, MODID);
-    public static final DeferredHolder<WorldCarver<?>, WorldCarver<?>> LABYRINTH = CARVERS.register("labyrinth", () -> new LabyrinthWorldCarver(LabyrinthCarverConfiguration.CODEC));
-
-    public static final DeferredRegister<MapCodec<? extends ChunkGenerator>> CHUNK_GENERATOR = DeferredRegister.create(Registries.CHUNK_GENERATOR, MODID);
-    public static final DeferredHolder<MapCodec<? extends ChunkGenerator>, MapCodec<? extends ChunkGenerator>> LABYRINTH_GEN = CHUNK_GENERATOR.register("labyrinth", () -> {
-           ExampleMod.LOGGER.info("Chunk Generator registration");
-           return LabyrinthChunkGenerator.CODEC;
-    });
-
-
-//    public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("basic_yellow_wallpaper", () -> new Block(BlockBehaviour.Properties.copy(Blocks.BEDROCK)));
-//    public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("basic_yellow_wallpaper", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
-
-//    public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item", () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
-//            .alwaysEat().nutrition(1).saturationMod(2f).build())));
-
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
-            .withTabsBefore(CreativeModeTabs.COMBAT)
+        .withTabsBefore(CreativeModeTabs.COMBAT)
 //            .icon(() -> EXAMPLE_BLOCK_ITEM.get().getDefaultInstance())
-            .displayItems((parameters, output) -> {
-            }).build());
+        .displayItems((parameters, output) -> {
+        }).build());
 
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer, Dist dist)
     {
@@ -94,12 +75,13 @@ public class ExampleMod
 
         modEventBus.addListener(this::commonSetup);
 
-        ExampleBlocks.BLOCKS.register(modEventBus);
-        ExampleItems.ITEMS.register(modEventBus);
-        ExampleFluids.FLUID_TYPES.register(modEventBus);
-        ExampleFluids.FLUIDS.register(modEventBus);
+        BLOCKS.register(modEventBus);
+        ITEMS.register(modEventBus);
+        FLUID_TYPES.register(modEventBus);
+        FLUIDS.register(modEventBus);
+        POTIONS.register(modEventBus);
 
-        ExampleFeaturesList.FEATURES.register(modEventBus);
+        FEATURES.register(modEventBus);
 
         CHUNK_GENERATOR.register(modEventBus);
         CARVERS.register(modEventBus);
@@ -114,6 +96,8 @@ public class ExampleMod
         if (dist == Dist.CLIENT) {
             ExampleClient.clientInit(modEventBus);
         }
+
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -126,12 +110,14 @@ public class ExampleMod
         LOGGER.info(Config.magicNumberIntroduction + Config.magicNumber);
 
         Config.items.forEach((item) -> LOGGER.info("ITEM >> {}", item.toString()));
+
+        ExampleCauldronInteraction.register();
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
         if (event.getTabKey() == EXAMPLE_TAB.getKey()) {
-            for(DeferredHolder<Item, ? extends Item> item : ExampleItems.ITEMS.getEntries()) {
+            for(DeferredHolder<Item, ? extends Item> item : ITEMS.getEntries()) {
                 event.accept(item.value());
             }
         }

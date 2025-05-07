@@ -4,7 +4,7 @@ package com.example.examplemod.data.generators.dimension;
 import com.example.examplemod.ExampleMod;
 import com.example.examplemod.data.generators.worldgen.ExampleNoiseSettings;
 import com.example.examplemod.data.generators.worldgen.biome.ExampleBiomes;
-import com.example.examplemod.worldgen.LabyrinthChunkGenerator;
+import com.example.examplemod.worldgen.chunk_generator.LabyrinthChunkGenerator;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;

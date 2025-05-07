@@ -1,9 +1,7 @@
-package com.example.examplemod;
+package com.example.examplemod.worldgen;
 
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.synth.NormalNoise;
-
-import java.awt.*;
 
 public abstract class NoiseStack {
     public NormalNoise noise;
