@@ -3,10 +3,9 @@
     "type": "neoforge:fluid_container",
     "fluid": "examplemod:almond_milk",
     "textures": {
-      "base": "minecraft:bucket",
-      "cover": "neoforge:bucket_fluid_cover",
-      "fluid": "examplemod:fluid/almond_milk",
-      "particle": ":"
+      "base": "minecraft:item/bucket",
+      "cover": "neoforge:item/mask/bucket_fluid_cover",
+      "fluid": "neoforge:item/mask/bucket_fluid"
     }
   }
 }

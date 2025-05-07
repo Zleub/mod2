@@ -21,21 +21,21 @@ public class ExampleItemModels extends ItemModelGenerators {
 
     @Override
     public void run() {
+        DynamicFluidContainerModel.Textures dynBucket_textures = new DynamicFluidContainerModel.Textures(
+                Optional.empty(),
+                Optional.of(ResourceLocation.fromNamespaceAndPath("minecraft", "item/bucket")),
+                Optional.of(ResourceLocation.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid")),
+                Optional.of(ResourceLocation.fromNamespaceAndPath("neoforge", "item/mask/bucket_fluid_cover"))
+        );
 
-//        this.generateFlatItem(ExampleItems.ALMOMD_MILK_BUCKET.get(), ModelTemplates.FLAT_ITEM);
-//        this.generateLayeredItem(ExampleItems.ALMOMD_MILK_BUCKET.get(), ResourceLocation.fromNamespaceAndPath("neoforge", "item/mask/bucket"), "")
         this.itemModelOutput.accept(ExampleItems.ALMOMD_MILK_BUCKET.get(), new DynamicFluidContainerModel.Unbaked(
-                new DynamicFluidContainerModel.Textures(
-                        Optional.of(ResourceLocation.fromNamespaceAndPath("", "")),
-                        Optional.of(ResourceLocation.fromNamespaceAndPath("minecraft", "bucket")),
-                        Optional.of(ResourceLocation.fromNamespaceAndPath(ExampleMod.MODID, "fluid/almond_milk")),
-                        Optional.of(ResourceLocation.fromNamespaceAndPath("neoforge", "bucket_fluid_cover"))
-                ),
+                dynBucket_textures,
                 ExampleFluids.ALMOND_MILK.get(),
                 false,
                 true,
                 true
         ));
+        this.generateFlatItem(ExampleItems.ALMOND_MILK_BOTTLE.get(), ModelTemplates.FLAT_ITEM);
     }
 
 
